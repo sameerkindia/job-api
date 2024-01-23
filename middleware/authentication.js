@@ -14,10 +14,12 @@ const auth = async (req, res, next) => {
   try {
     const payload = JWT.verify(token, process.env.JWT_SECRET);
 
-    req.user = { userId: payload.userID, name: payload.name };
+    req.user = { userId: payload.userId, name: payload.userName };
   } catch (error) {
     throw new UnauthenticatedError("Authentication invalid");
   }
+
+  next();
 };
 
 module.exports = auth;
