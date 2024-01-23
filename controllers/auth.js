@@ -11,6 +11,9 @@ const register = async (req, res) => {
 
   res.status(StatusCodes.CREATED).json({ user: { name: user.name }, token });
 };
+
+////////////// LOGIN
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -21,6 +24,12 @@ const login = async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
+    throw new UnauthenticatedError("Invalid Credentials");
+  }
+
+  const isPasswordCorrect = await user.comparePassword(password);
+
+  if (!isPasswordCorrect) {
     throw new UnauthenticatedError("Invalid Credentials");
   }
 
